@@ -64,7 +64,7 @@ public class Order {
 		this.status = status.informacaoDoLog();
 	}
 
-	public void setarStatus() {
+	public void setarStatus(OrderStatusEnum paymentSuccess) {
 		this.status = status.alterarStatus();
 	}
 

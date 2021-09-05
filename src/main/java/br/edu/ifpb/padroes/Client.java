@@ -11,7 +11,7 @@ public class Client {
     	
    
     	
-        Order order = new Order();
+        Order order = new Order(null);
         OrderManager orderManager = new OrderManager(order);
         orderManager.payOrder(payment.pagar(new DebitStrategy()));
         orderManager.cancelOrder();

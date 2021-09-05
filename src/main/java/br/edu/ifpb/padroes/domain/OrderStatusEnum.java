@@ -1,72 +1,94 @@
 package br.edu.ifpb.padroes.domain;
 
+import br.edu.ifpb.padroes.service.log.LogHandler;
+import br.edu.ifpb.padroes.service.log.LogService;
+import br.edu.ifpb.padroes.service.mail.EmailNotification;
+
 public enum OrderStatusEnum implements OrderStatus {
 	IN_PROGRESS {
 		@Override
 		public OrderStatus notificarEmail() {
+			EmailNotification emailNotification = new EmailNotification();
 			emailNotification.sendMailNotification(String.format("Order %d in progress", order.getId()));
 		}
 
 		@Override
 		public OrderStatus informacaoDoLog() {
-			logService.debug(String.format("order %d in progress", order.getId()));
+			LogService logService = new LogService(new LogHandler(LogHandler.LogHandlerType.FILE));
+			logService.info("in progress");
+			return null;
 		}
 
 		@Override
 		public OrderStatus alterarStatus() {
-			order.setStatus(Order.OrderStatus.IN_PROGRESS);
+			order.setStatus(Order.OrderStatus.PAYMENT_SUCCESS);
+			return null;
+
 		}
 	},
 	CANCELED {
 
 		@Override
 		public OrderStatus notificarEmail() {
-			order.setStatus(Order.OrderStatus.CANCELED);
+			EmailNotification emailNotification = new EmailNotification();
+			emailNotification.sendMailNotification(String.format("Order %d completed successfully", order.getId()));
 		}
 
 		@Override
 		public OrderStatus informacaoDoLog() {
-			emailNotification.sendMailNotification(String.format("Order %d canceled", order.getId()));
+			LogService logService = new LogService(new LogHandler(LogHandler.LogHandlerType.FILE));
+			logService.info("payment finished");
+			return null;
 		}
 
 		@Override
 		public OrderStatus alterarStatus() {
-			logService.debug(String.format("order %d canceled", order.getId()));
+			Order order;
+			order.setarStatus(PAYMENT_SUCCESS);
+			return null;
 		}
 
 	},
 	PAYMENT_SUCCESS {
 		@Override
 		public OrderStatus notificarEmail() {
-			emailNotification.sendMailNotification(String.format("Order %d completed successfully",order.getId()));
+			EmailNotification emailNotification = new EmailNotification();
+			emailNotification.sendMailNotification(String.format("Order %d completed successfully", order.getId()));
 		}
 
 		@Override
 		public OrderStatus informacaoDoLog() {
+			LogService logService = new LogService(new LogHandler(LogHandler.LogHandlerType.FILE));
 			logService.info("payment finished");
+			return null;
 		}
 
 		@Override
 		public OrderStatus alterarStatus() {
 			order.setStatus(Order.OrderStatus.PAYMENT_SUCCESS);
-			
+			return null;
+
 		}
 	},
-	PAYMENT_REFUSED{
+	PAYMENT_REFUSED {
 
 		@Override
 		public OrderStatus notificarEmail() {
-			emailNotification.sendMailNotification(String.format("Order %d refused", order.getId()));
+			EmailNotification emailNotification = new EmailNotification();
+			emailNotification.sendMailNotification(String.format("Order %d completed successfully", order.getId()));
 		}
 
 		@Override
 		public OrderStatus informacaoDoLog() {
-			logService.error("payment refused");
+			LogService logService = new LogService(new LogHandler(LogHandler.LogHandlerType.FILE));
+			logService.info("payment finished");
+			return null;
 		}
 
 		@Override
 		public OrderStatus alterarStatus() {
-			order.setStatus(Order.OrderStatus.PAYMENT_REFUSED);
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	};
